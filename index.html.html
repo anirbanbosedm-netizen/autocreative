@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anima.ai – AI Creative Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,600;0,900;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#4F46E5;--brand2:#818CF8;--brand-light:#EEF2FF;--brand-dark:#3730A3;
+  --gold:#F59E0B;--gold-light:#FFFBEB;
+  --bg:#F8F9FC;--surface:#FFFFFF;
+  --text:#111827;--muted:#6B7280;--border:#E5E7EB;
+  --success:#059669;--success-light:#ECFDF5;
+  --danger:#DC2626;--danger-light:#FEF2F2;
+  --canva:#7B2D8B;
+  --r:12px;--sh:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);--sh-lg:0 10px 40px rgba(79,70,229,.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;}
+.screen{display:none;width:100%;height:100vh;}
+.screen.active{display:flex;}
+
+/* ── API KEY SETUP SCREEN ── */
+#s-apikey{align-items:center;justify-content:center;background:linear-gradient(150deg,#0F172A,#1E1B4B 60%,#312E81);}
+.apikey-box{background:#fff;border-radius:20px;padding:40px 44px;width:480px;max-width:95vw;box-shadow:0 24px 80px rgba(0,0,0,.35);}
+.apikey-logo{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:900;color:var(--brand);margin-bottom:6px;}
+.apikey-logo span{color:var(--gold);}
+.apikey-title{font-family:'Fraunces',serif;font-size:1.4rem;font-weight:900;margin-top:18px;letter-spacing:-.02em;}
+.apikey-sub{font-size:.85rem;color:var(--muted);margin-top:5px;line-height:1.6;}
+.apikey-info{background:var(--brand-light);border-radius:10px;padding:12px 14px;margin:16px 0;font-size:.8rem;color:var(--brand);line-height:1.6;}
+.apikey-info a{color:var(--brand);font-weight:700;}
+.apikey-input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;color:var(--text);background:#FAFAFA;margin-bottom:6px;}
+.apikey-input:focus{outline:none;border-color:var(--brand);background:#fff;}
+.apikey-note{font-size:.74rem;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+.apikey-note strong{color:var(--text);}
+.apikey-err{background:var(--danger-light);border:1px solid #FECACA;border-radius:8px;padding:9px 12px;font-size:.78rem;color:var(--danger);margin-bottom:12px;display:none;}
+.apikey-btn{width:100%;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:13px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.92rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.apikey-btn:hover{background:var(--brand-dark);}
+.apikey-skip{text-align:center;margin-top:12px;font-size:.8rem;color:var(--muted);}
+.apikey-skip a{color:var(--brand);font-weight:700;cursor:pointer;}
+
+/* ── LOGIN ── */
+#sl{align-items:stretch;}
+.ll{flex:1;display:flex;flex-direction:column;justify-content:center;padding:64px;position:relative;overflow:hidden;
+  background:linear-gradient(150deg,#0F172A 0%,#1E1B4B 60%,#312E81 100%);}
+.ll::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 15% 85%,rgba(79,70,229,.45),transparent 55%),
+             radial-gradient(ellipse at 85% 15%,rgba(245,158,11,.18),transparent 50%);}
+.orb{position:absolute;border-radius:50%;filter:blur(72px);}
+.o1{width:340px;height:340px;background:#4F46E5;opacity:.35;top:-100px;right:-80px;animation:fa 9s ease-in-out infinite;}
+.o2{width:240px;height:240px;background:#F59E0B;opacity:.22;bottom:40px;left:20px;animation:fb 7s ease-in-out infinite;}
+@keyframes fa{0%,100%{transform:translate(0,0);}50%{transform:translate(-16px,20px);}}
+@keyframes fb{0%,100%{transform:translate(0,0);}50%{transform:translate(14px,-16px);}}
+.ll-logo{position:relative;z-index:1;font-family:'Fraunces',serif;font-size:2rem;font-weight:900;color:#fff;letter-spacing:-.02em;}
+.ll-logo span{color:#F59E0B;}
+.ll-tag{color:rgba(255,255,255,.45);font-size:.85rem;margin-top:4px;}
+.ll-hero{position:relative;z-index:1;margin-top:52px;}
+.ll-hero h1{font-family:'Fraunces',serif;font-size:2.8rem;font-weight:900;color:#fff;line-height:1.12;letter-spacing:-.02em;}
+.ll-hero h1 em{color:#F59E0B;font-style:normal;}
+.ll-hero p{color:rgba(255,255,255,.48);font-size:.92rem;margin-top:14px;line-height:1.7;max-width:360px;}
+.ll-steps{position:relative;z-index:1;display:flex;flex-direction:column;gap:12px;margin-top:40px;}
+.ll-step{display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.7);font-size:.85rem;font-weight:500;}
+.ll-sn{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#fff;flex-shrink:0;}
+.lr{width:460px;background:#fff;display:flex;flex-direction:column;justify-content:center;padding:56px 44px;}
+.lr-title{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:900;letter-spacing:-.02em;}
+.lr-sub{color:var(--muted);font-size:.88rem;margin-top:5px;}
+.lform{margin-top:28px;display:flex;flex-direction:column;gap:14px;}
+.ig{display:flex;flex-direction:column;gap:5px;}
+.ig label{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--text);}
+.ig input{border:1.5px solid var(--border);border-radius:10px;padding:12px 15px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;color:var(--text);background:#FAFAFA;transition:border-color .15s;}
+.ig input:focus{outline:none;border-color:var(--brand);background:#fff;}
+.lbtn{background:var(--brand);color:#fff;border:none;border-radius:10px;padding:13px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.92rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.lbtn:hover{background:var(--brand-dark);transform:translateY(-1px);}
+.ldiv{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.78rem;}
+.ldiv::before,.ldiv::after{content:'';flex:1;height:1px;background:var(--border);}
+.lsw{text-align:center;font-size:.83rem;color:var(--muted);}
+.lsw a{color:var(--brand);font-weight:700;cursor:pointer;}
+.lerr{background:var(--danger-light);border:1px solid #FECACA;border-radius:8px;padding:10px 13px;font-size:.8rem;color:var(--danger);display:none;}
+
+/* ── APP SHELL ── */
+#sa{flex-direction:row;}
+#sb{width:224px;min-width:224px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;}
+.sb-logo{padding:20px 18px 16px;font-family:'Fraunces',serif;font-size:1.3rem;font-weight:900;color:var(--text);border-bottom:1px solid var(--border);}
+.sb-logo span{color:var(--brand);}
+.sb-user{display:flex;align-items:center;gap:9px;padding:12px 18px;border-bottom:1px solid var(--border);}
+.sb-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--gold));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#fff;flex-shrink:0;}
+.sb-un{font-size:.8rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sb-ue{font-size:.66rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sb-sec{padding:12px 18px 4px;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 18px;cursor:pointer;font-size:.8rem;font-weight:600;color:var(--muted);border-left:3px solid transparent;transition:all .14s;user-select:none;}
+.ni:hover{background:#F5F3FF;color:var(--text);}
+.ni.active{background:var(--brand-light);color:var(--brand);border-left-color:var(--brand);}
+.ni .ndot{margin-left:auto;min-width:18px;height:18px;padding:0 4px;background:var(--brand);color:#fff;border-radius:9px;font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.sb-bot{margin-top:auto;}
+.sb-div{height:1px;background:var(--border);margin:8px 0;}
+.canva-sb{display:none;align-items:center;gap:8px;padding:8px 18px;font-size:.72rem;font-weight:600;color:var(--canva);background:#FAF5FF;border-top:1px solid #E9D5FF;}
+.canva-dot{width:7px;height:7px;border-radius:50%;background:var(--canva);flex-shrink:0;}
+.api-sb{display:flex;align-items:center;gap:6px;padding:6px 18px;font-size:.68rem;color:var(--success);font-weight:600;}
+.api-sb-dot{width:6px;height:6px;border-radius:50%;background:var(--success);flex-shrink:0;}
+.sb-so{display:flex;align-items:center;gap:9px;padding:8px 18px;cursor:pointer;font-size:.8rem;font-weight:600;color:var(--muted);transition:all .14s;}
+.sb-so:hover{color:var(--danger);}
+
+#main{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+.view{display:none;flex-direction:column;padding:28px 34px;min-height:100%;}
+.view.active{display:flex;animation:fu .2s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;}
+.pt{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:900;letter-spacing:-.02em;}
+.ps{font-size:.73rem;font-weight:700;letter-spacing:.07em;color:var(--muted);text-transform:uppercase;margin-top:2px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:10px;padding:10px 20px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.84rem;font-weight:700;cursor:pointer;transition:all .17s;}
+.bp{background:var(--brand);color:#fff;}.bp:hover{background:var(--brand-dark);transform:translateY(-1px);box-shadow:0 4px 16px rgba(79,70,229,.28);}
+.bp:disabled{background:#A5B4FC;cursor:wait;transform:none;box-shadow:none;}
+.bs{background:#fff;color:var(--text);border:1.5px solid var(--border);}.bs:hover{border-color:var(--brand);color:var(--brand);}
+.bsu{background:var(--success);color:#fff;}.bsu:hover{background:#047857;}
+.bds{background:var(--danger-light);color:var(--danger);border:1px solid #FECACA;}.bds:hover{background:#FEE2E2;}
+.bsm{padding:6px 13px;font-size:.73rem;border-radius:8px;}
+.bf{width:100%;padding:13px;}
+
+/* FORMS */
+.fi{border:1.5px solid var(--border);border-radius:10px;padding:10px 13px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.88rem;color:var(--text);background:#FAFAFA;width:100%;transition:border-color .15s;}
+.fi:focus{outline:none;border-color:var(--brand);background:#fff;}
+.fl{font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block;}
+.fg{display:flex;flex-direction:column;margin-bottom:15px;}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.card{background:#fff;border-radius:var(--r);border:1px solid var(--border);padding:22px;box-shadow:var(--sh);}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;font-size:.65rem;font-weight:800;padding:3px 8px;border-radius:20px;letter-spacing:.03em;gap:3px;}
+.bg-pend{background:#FEF3C7;color:#92400E;}
+.bg-gen{background:var(--brand-light);color:var(--brand);}
+.bg-done{background:var(--success-light);color:var(--success);}
+.bg-grey{background:#F3F4F6;color:#6B7280;}
+.bg-canva{background:#FAF5FF;color:var(--canva);}
+
+/* DASHBOARD */
+.flow-banner{background:linear-gradient(135deg,#312E81,#4F46E5 50%,#6D28D9);border-radius:16px;padding:22px 26px;color:#fff;display:flex;align-items:center;gap:0;margin-bottom:20px;overflow:hidden;position:relative;}
+.flow-banner::after{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.06);}
+.flow-steps{display:flex;align-items:center;gap:0;flex:1;position:relative;z-index:1;}
+.fstep{display:flex;flex-direction:column;align-items:center;text-align:center;gap:5px;cursor:pointer;}
+.fstep-ico{width:42px;height:42px;border-radius:11px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+.fstep-ico.done{background:rgba(5,150,105,.3);}
+.fstep-ico.next{background:rgba(245,158,11,.3);box-shadow:0 0 0 3px rgba(245,158,11,.4);}
+.fstep-lbl{font-size:.66rem;font-weight:700;color:rgba(255,255,255,.85);}
+.fstep-sub{font-size:.58rem;color:rgba(255,255,255,.5);}
+.farrow{color:rgba(255,255,255,.28);font-size:1.1rem;padding:0 8px;margin-top:-14px;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+.sc{background:#fff;border-radius:var(--r);border:1px solid var(--border);padding:17px;box-shadow:var(--sh);}
+.sc-ico{font-size:1.3rem;margin-bottom:6px;}
+.sc-lbl{font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+.sc-val{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:900;letter-spacing:-.02em;margin-top:2px;}
+.flow-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.fc{background:#fff;border-radius:var(--r);border:1px solid var(--border);padding:17px;box-shadow:var(--sh);}
+.fc h3{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:10px;}
+.ai-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);}
+.ai-item:last-child{border-bottom:none;}
+.ai-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.ai-t{font-size:.8rem;font-weight:600;}
+.ai-m{font-size:.68rem;color:var(--muted);margin-top:1px;}
+.empty-hint{color:var(--muted);font-size:.82rem;text-align:center;padding:16px 0;line-height:1.6;}
+
+/* COMPANY */
+.logo-row{display:flex;align-items:center;gap:13px;margin-bottom:16px;}
+.logo-box{width:68px;height:68px;border-radius:14px;background:var(--bg);border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;flex-shrink:0;}
+.logo-box:hover{border-color:var(--brand);}
+.logo-box img{width:100%;height:100%;object-fit:cover;display:none;}
+.logo-filelbl{flex:1;border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-size:.85rem;color:var(--muted);background:#FAFAFA;cursor:pointer;}
+.logo-filelbl:hover{border-color:var(--brand);color:var(--brand);}
+#logoFile{display:none;}
+
+/* INTEGRATIONS */
+.int-wrap{max-width:660px;}
+.hw-card{border-radius:var(--r);padding:18px 20px;margin-bottom:16px;background:linear-gradient(135deg,#FAF5FF,#EDE9FE);border:1.5px solid #C4B5FD;}
+.hw-title{font-family:'Fraunces',serif;font-size:.97rem;font-weight:900;color:#5B21B6;margin-bottom:9px;}
+.hw-steps{display:flex;flex-direction:column;gap:8px;}
+.hw-step{display:flex;align-items:flex-start;gap:9px;font-size:.8rem;color:#6D28D9;line-height:1.5;}
+.hw-n{width:19px;height:19px;border-radius:50%;background:#7C3AED;color:#fff;font-size:.62rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.int-card{background:#fff;border:1.5px solid var(--border);border-radius:var(--r);padding:17px 20px;display:flex;align-items:center;gap:14px;box-shadow:var(--sh);margin-bottom:11px;transition:border-color .2s;}
+.int-card.connected{border-color:var(--success);}
+.int-card.coming{opacity:.42;pointer-events:none;}
+.int-ico{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+.int-info{flex:1;}
+.int-name{font-size:.93rem;font-weight:700;}
+.int-desc{font-size:.75rem;color:var(--muted);margin-top:2px;line-height:1.4;}
+.int-ok{font-size:.71rem;font-weight:700;color:var(--success);margin-top:4px;display:none;}
+.int-card.connected .int-ok{display:block;}
+
+/* CALENDAR */
+.cal-nav{display:flex;align-items:center;gap:11px;margin-bottom:14px;}
+.cnb{width:31px;height:31px;border-radius:8px;border:1.5px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.95rem;color:var(--muted);}
+.cnb:hover{border-color:var(--brand);color:var(--brand);}
+.cml{font-family:'Fraunces',serif;font-size:1rem;font-weight:900;}
+.cgrid{background:#fff;border-radius:var(--r);border:1px solid var(--border);overflow:hidden;box-shadow:var(--sh);}
+.ch{display:grid;grid-template-columns:repeat(7,1fr);}
+.ch div{padding:9px;text-align:center;font-size:.65rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);}
+.cb{display:grid;grid-template-columns:repeat(7,1fr);}
+.cc{min-height:84px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:6px;cursor:pointer;transition:background .1s;}
+.cc:hover{background:#F5F3FF;}
+.cc.today{background:var(--brand-light);}
+.cc.today .dn{color:var(--brand);font-weight:800;}
+.cc.other .dn{color:#D1D5DB;}
+.dn{font-size:.76rem;font-weight:600;margin-bottom:3px;}
+.cpill{font-size:.58rem;font-weight:700;padding:2px 5px;border-radius:4px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cpill.festival{background:#FEF3C7;color:#92400E;}
+.cpill.company{background:#DBEAFE;color:#1E40AF;}
+.cpill.product{background:#D1FAE5;color:#065F46;}
+.cpill.offer{background:#FCE7F3;color:#9D174D;}
+.cpill.custom{background:var(--brand-light);color:var(--brand);}
+
+/* APPROVALS */
+.appr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;}
+.pcard{background:#fff;border-radius:16px;border:1px solid var(--border);box-shadow:var(--sh);overflow:hidden;transition:transform .15s,box-shadow .15s;}
+.pcard:hover{transform:translateY(-2px);box-shadow:var(--sh-lg);}
+.pcard-img{width:100%;aspect-ratio:1;position:relative;overflow:hidden;background:#F3F4F6;}
+.pcard-img canvas{width:100%;height:100%;display:block;}
+.gen-overlay{position:absolute;inset:0;background:rgba(15,15,26,.7);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#fff;}
+.gspin{width:30px;height:30px;border:3px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:sp .75s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.gen-label{font-size:.8rem;font-weight:700;letter-spacing:.04em;}
+.gen-sub{font-size:.68rem;color:rgba(255,255,255,.55);}
+.pcard-body{padding:15px 17px 0;}
+.pcard-badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+.pcard-title{font-family:'Fraunces',serif;font-size:1.05rem;font-weight:900;letter-spacing:-.01em;}
+.pcard-desc{font-size:.79rem;color:var(--muted);margin-top:4px;line-height:1.5;}
+.caption-box{background:var(--bg);border-left:3px solid var(--brand);border-radius:0 8px 8px 0;padding:10px 12px;margin-top:11px;}
+.caption-box-lbl{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--brand);margin-bottom:4px;}
+.caption-text{font-size:.79rem;color:var(--text);line-height:1.6;}
+.hashtag-text{font-size:.73rem;color:var(--brand);margin-top:5px;font-weight:600;line-height:1.7;}
+.pcard-meta{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;padding-bottom:13px;}
+.pcard-actions{display:flex;flex-wrap:wrap;gap:7px;padding:12px 17px 15px;border-top:1px solid var(--border);}
+
+/* POSTED */
+.posted-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.posted-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);}
+.posted-card-img{width:100%;aspect-ratio:1;overflow:hidden;}
+.posted-card-img canvas{width:100%;height:100%;display:block;}
+.posted-card-body{padding:12px 14px;}
+.posted-card-title{font-size:.87rem;font-weight:700;}
+.posted-card-meta{font-size:.71rem;color:var(--muted);margin-top:2px;}
+.posted-card-cap{font-size:.73rem;color:var(--muted);margin-top:4px;line-height:1.4;}
+.posted-card-actions{padding:0 14px 12px;display:flex;gap:7px;}
+
+/* ANALYTICS */
+.an-grid{display:grid;grid-template-columns:2fr 1fr;gap:14px;}
+.anc{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:18px;box-shadow:var(--sh);}
+.anc h3{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:12px;}
+.barchart{display:flex;align-items:flex-end;gap:8px;height:110px;}
+.bw{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;}
+.bar{width:100%;border-radius:4px 4px 0 0;}
+.bl{font-size:.58rem;color:var(--muted);font-weight:700;}
+.pl-list{display:flex;flex-direction:column;gap:10px;}
+.pl-row{display:flex;align-items:center;gap:8px;}
+.pl-ico{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;}
+.pl-name{font-size:.77rem;font-weight:700;flex:1;}
+.pl-bg{height:4px;background:var(--bg);border-radius:2px;flex:2;}
+.pl-fill{height:100%;border-radius:2px;background:var(--brand);}
+.pl-pct{font-size:.68rem;font-weight:800;width:30px;text-align:right;}
+.eng-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:4px;}
+.eg-lbl{font-size:.66rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);}
+.eg-val{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:900;margin-top:2px;}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(15,15,26,.5);display:flex;align-items:center;justify-content:center;z-index:300;backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-bg.open{opacity:1;pointer-events:all;}
+.modal{background:#fff;border-radius:18px;padding:26px 30px;width:540px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(15,15,26,.25);transform:scale(.94);transition:transform .2s;}
+.modal-bg.open .modal{transform:scale(1);}
+.mhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.mtitle{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:900;}
+.mclose{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted);padding:2px 6px;border-radius:6px;}
+.mclose:hover{background:var(--bg);}
+.modal textarea{border:1.5px solid var(--border);border-radius:10px;padding:10px 13px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.88rem;width:100%;resize:vertical;background:#FAFAFA;}
+.modal textarea:focus{outline:none;border-color:var(--brand);background:#fff;}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--text);color:#fff;padding:11px 20px;border-radius:12px;font-size:.83rem;font-weight:700;z-index:999;opacity:0;transform:translateY(10px);transition:all .28s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2);}
+.toast.show{opacity:1;transform:translateY(0);}
+.ldots::after{content:'.';animation:ld 1.2s infinite;}
+@keyframes ld{0%{content:'.';}33%{content:'..';}66%{content:'...';}100%{content:'.';}}}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:#D1D5DB;border-radius:3px;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ API KEY SETUP ═══════════ -->
+<div class="screen active" id="s-apikey">
+  <div class="apikey-box">
+    <div class="apikey-logo">Anima.<span>ai</span></div>
+    <div class="apikey-title">One-time setup</div>
+    <div class="apikey-sub">Enter your Anthropic API key to power AI caption and creative generation. Your key is stored only in your browser — never sent to any server.</div>
+    <div class="apikey-info">
+      🔑 Get a free API key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a><br>
+      Your key starts with <strong>sk-ant-…</strong> and is stored locally in your browser only.
+    </div>
+    <div class="apikey-err" id="key-err"></div>
+    <input class="apikey-input" type="password" id="api-key-input" placeholder="sk-ant-api03-…" autocomplete="off">
+    <div class="apikey-note"><strong>Privacy:</strong> Your API key never leaves your device. It is saved in localStorage and used only for direct browser-to-Anthropic API calls.</div>
+    <button class="apikey-btn" onclick="saveApiKey()">Save Key &amp; Continue →</button>
+    <div class="apikey-skip">Testing the UI? <a onclick="skipApiKey()">Skip for now</a> (AI captions will use fallback text)</div>
+  </div>
+</div>
+
+<!-- ═══════════ LOGIN ═══════════ -->
+<div class="screen" id="sl">
+  <div class="ll">
+    <div class="orb o1"></div><div class="orb o2"></div>
+    <div class="ll-logo" style="position:relative;z-index:1;">Anima.<span>ai</span><div class="ll-tag">AI creative platform for busy professionals</div></div>
+    <div class="ll-hero">
+      <h1>Your social media,<br>on <em>autopilot</em></h1>
+      <p>Fill your calendar once. AI generates every creative, caption and hashtag — automatically. You just approve and download.</p>
+    </div>
+    <div class="ll-steps">
+      <div class="ll-step"><div class="ll-sn">1</div>Set up your profile once</div>
+      <div class="ll-step"><div class="ll-sn">2</div>Pick dates on the calendar</div>
+      <div class="ll-step"><div class="ll-sn">3</div>AI generates everything instantly</div>
+      <div class="ll-step"><div class="ll-sn">4</div>Approve &amp; download — done</div>
+    </div>
+  </div>
+  <div class="lr">
+    <div class="lr-title" id="a-title">Welcome back</div>
+    <div class="lr-sub" id="a-sub">Sign in to your Anima.ai account</div>
+    <div class="lform">
+      <div class="lerr" id="a-err"></div>
+      <div class="ig" id="a-namewrap" style="display:none;"><label>Full Name</label><input type="text" id="a-name" placeholder="Dr. Sarah Khan"></div>
+      <div class="ig"><label>Email Address</label><input type="email" id="a-email" placeholder="doctor@clinic.com"></div>
+      <div class="ig"><label>Password</label><input type="password" id="a-pw" placeholder="••••••••"></div>
+      <button class="lbtn" onclick="doAuth()">Sign In</button>
+      <div class="ldiv">or</div>
+      <div class="lsw" id="a-sw">New here? <a onclick="toggleAuth()">Create a free account</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ APP ═══════════ -->
+<div class="screen" id="sa">
+  <nav id="sb">
+    <div class="sb-logo">Anima.<span>ai</span></div>
+    <div class="sb-user">
+      <div class="sb-av" id="sb-av">D</div>
+      <div><div class="sb-un" id="sb-un">Demo User</div><div class="sb-ue" id="sb-ue">demo@anima.ai</div></div>
+    </div>
+    <div class="sb-sec">Workspace</div>
+    <div class="ni active" onclick="go('dashboard',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</div>
+    <div class="ni" onclick="go('calendar',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Content Calendar</div>
+    <div class="ni" onclick="go('approvals',this)" id="ni-appr"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Review Creatives<span class="ndot" id="appr-dot" style="display:none;">0</span></div>
+    <div class="ni" onclick="go('posted',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Approved &amp; Downloaded</div>
+    <div class="ni" onclick="go('analytics',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Analytics</div>
+    <div class="sb-sec">Setup</div>
+    <div class="ni" onclick="go('integrations',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Integrations</div>
+    <div class="ni" onclick="go('company',this)"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>My Profile</div>
+    <div class="sb-bot">
+      <div class="api-sb" id="api-sb-indicator"><div class="api-sb-dot"></div>AI captions active</div>
+      <div class="canva-sb" id="canva-sb"><div class="canva-dot"></div>Canva auto-sync ON</div>
+      <div class="sb-div"></div>
+      <div class="sb-so" onclick="signOut()"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</div>
+    </div>
+  </nav>
+
+  <main id="main">
+
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dashboard">
+      <div class="flow-banner"><div class="flow-steps" id="flow-steps"></div></div>
+      <div class="stats-grid">
+        <div class="sc"><div class="sc-ico">🎨</div><div class="sc-lbl">AI Creatives</div><div class="sc-val" id="st-c">0</div></div>
+        <div class="sc"><div class="sc-ico">⏳</div><div class="sc-lbl">Awaiting Review</div><div class="sc-val" id="st-a">0</div></div>
+        <div class="sc"><div class="sc-ico">✅</div><div class="sc-lbl">Approved</div><div class="sc-val" id="st-p">0</div></div>
+        <div class="sc"><div class="sc-ico">📅</div><div class="sc-lbl">Calendar Entries</div><div class="sc-val" id="st-e">0</div></div>
+      </div>
+      <div class="flow-grid">
+        <div class="fc"><h3>Recent Creatives</h3><div id="act-list"><div class="empty-hint">No creatives yet.<br>Add dates to your calendar — AI generates everything automatically.</div></div></div>
+        <div class="fc"><h3>Quick Actions</h3>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-top:2px;">
+            <button class="btn bp" onclick="go('calendar',qn('calendar'))">📅 Plan Calendar Entries</button>
+            <button class="btn bs" onclick="go('approvals',qn('approvals'))">🖼 Review AI Creatives</button>
+            <button class="btn bs" onclick="go('company',qn('company'))">🏢 Update My Profile</button>
+            <button class="btn bs" onclick="go('integrations',qn('integrations'))">🔗 Manage Integrations</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY PROFILE / COMPANY -->
+    <div class="view" id="view-company">
+      <div class="ph"><div><div class="pt">My Profile</div><div class="ps">Saved permanently — powers every AI creative</div></div></div>
+      <div style="max-width:640px;">
+        <div class="card">
+          <span class="fl" style="margin-bottom:8px;">Logo / Profile Photo</span>
+          <div class="logo-row">
+            <label class="logo-box" for="logoFile" id="logo-box">
+              <svg width="20" height="20" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <img id="logo-img" src="" style="display:none;width:100%;height:100%;object-fit:cover;">
+            </label>
+            <label class="logo-filelbl" for="logoFile" id="logo-filelbl">Choose logo or profile photo</label>
+            <input type="file" id="logoFile" accept="image/*" onchange="handleLogo(this)">
+          </div>
+          <div class="fg"><span class="fl">Name / Clinic Name *</span><input class="fi" type="text" id="co-name" placeholder="Dr. Sarah Khan / Khan Dental Clinic"></div>
+          <div class="f2">
+            <div class="fg"><span class="fl">Profession / Specialisation</span><input class="fi" type="text" id="co-spec" placeholder="Cardiologist, Dentist, Lawyer…"></div>
+            <div class="fg"><span class="fl">Phone</span><input class="fi" type="tel" id="co-phone" placeholder="+91 98765 43210"></div>
+          </div>
+          <div class="f2">
+            <div class="fg"><span class="fl">Email</span><input class="fi" type="email" id="co-email" placeholder="doctor@clinic.com"></div>
+            <div class="fg"><span class="fl">Website</span><input class="fi" type="url" id="co-web" placeholder="https://clinic.com"></div>
+          </div>
+          <div class="fg"><span class="fl">Address / Location</span><input class="fi" type="text" id="co-addr" placeholder="123 Medical Road, Mumbai"></div>
+          <div class="fg"><span class="fl">Brand Colors — Applied to every AI creative</span>
+            <div style="display:flex;gap:10px;align-items:center;">
+              <input type="color" id="co-c1" value="#4F46E5" style="width:40px;height:40px;border-radius:8px;border:1.5px solid var(--border);padding:2px;cursor:pointer;">
+              <input type="color" id="co-c2" value="#F59E0B" style="width:40px;height:40px;border-radius:8px;border:1.5px solid var(--border);padding:2px;cursor:pointer;">
+              <span style="font-size:.78rem;color:var(--muted);">Primary &amp; accent brand colors</span>
+            </div>
+          </div>
+          <button class="btn bp bf" onclick="saveCompany()">Save Profile &amp; Continue →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTEGRATIONS -->
+    <div class="view" id="view-integrations">
+      <div class="ph"><div><div class="pt">Integrations</div><div class="ps">One-time setup — then everything runs automatically</div></div></div>
+      <div class="int-wrap">
+        <div class="hw-card">
+          <div class="hw-title">🎨 How Canva Works Here</div>
+          <div class="hw-steps">
+            <div class="hw-step"><div class="hw-n">1</div><div>Connect your Canva account once below.</div></div>
+            <div class="hw-step"><div class="hw-n">2</div><div>When you add a calendar entry, AI generates the full creative — design, caption, hashtags.</div></div>
+            <div class="hw-step"><div class="hw-n">3</div><div>The finished creative is <strong>automatically marked for Canva sync</strong> as a 1080×1080 design.</div></div>
+            <div class="hw-step"><div class="hw-n">4</div><div>You approve here and <strong>download in one click</strong>. No editing required — the AI already did it.</div></div>
+          </div>
+          <div style="margin-top:10px;font-size:.76rem;color:#6D28D9;background:rgba(124,58,237,.07);border-radius:7px;padding:8px 11px;">
+            <strong>Note:</strong> Full Canva API auto-push requires a Canva Developer API key (backend setup). In this open-source version, connecting Canva activates the sync indicator and download workflow.
+          </div>
+        </div>
+        <div class="int-card" id="ic-canva">
+          <div class="int-ico" style="background:#FAF5FF;">🎨</div>
+          <div class="int-info">
+            <div class="int-name">Canva</div>
+            <div class="int-desc">Connect once. AI generates creatives and marks them for Canva sync as 1080×1080 designs. Approve here and download.</div>
+            <div class="int-ok" id="canva-ok">✓ Connected — creatives marked for Canva auto-sync</div>
+          </div>
+          <button class="btn bs bsm" id="canva-btn" onclick="connectCanva()">Connect</button>
+        </div>
+        <div class="int-card coming">
+          <div class="int-ico" style="background:#FEE2E2;">📷</div>
+          <div class="int-info"><div class="int-name">Instagram <span style="font-size:.7rem;color:var(--muted);font-weight:400;">— Coming soon</span></div><div class="int-desc">Auto-publish approved creatives to Instagram. Requires backend OAuth.</div></div>
+          <button class="btn bs bsm" disabled>Soon</button>
+        </div>
+        <div class="int-card coming">
+          <div class="int-ico" style="background:#DBEAFE;">📘</div>
+          <div class="int-info"><div class="int-name">Facebook <span style="font-size:.7rem;color:var(--muted);font-weight:400;">— Coming soon</span></div><div class="int-desc">Auto-publish to Facebook Page. Requires backend OAuth.</div></div>
+          <button class="btn bs bsm" disabled>Soon</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALENDAR -->
+    <div class="view" id="view-calendar">
+      <div class="ph">
+        <div><div class="pt">Content Calendar</div><div class="ps">Select a date → AI generates the creative automatically</div></div>
+        <button class="btn bp" onclick="openModal('modal-entry')">+ Add Entry</button>
+      </div>
+      <div class="cal-nav">
+        <div class="cnb" onclick="chMo(-1)">&#8249;</div>
+        <div class="cml" id="cal-lbl"></div>
+        <div class="cnb" onclick="chMo(1)">&#8250;</div>
+      </div>
+      <div class="cgrid">
+        <div class="ch" id="cal-head"></div>
+        <div class="cb" id="cal-body"></div>
+      </div>
+    </div>
+
+    <!-- APPROVALS -->
+    <div class="view" id="view-approvals">
+      <div class="ph"><div><div class="pt">Review Creatives</div><div class="ps">AI-generated — approve and download</div></div></div>
+      <div class="appr-grid" id="appr-grid">
+        <div style="grid-column:1/-1;color:var(--muted);text-align:center;padding:48px 0;font-size:.88rem;line-height:1.8;">No creatives yet.<br>Add entries to your calendar and AI will generate everything automatically.</div>
+      </div>
+    </div>
+
+    <!-- POSTED / DOWNLOADED -->
+    <div class="view" id="view-posted">
+      <div class="ph"><div><div class="pt">Approved &amp; Downloaded</div><div class="ps">Your ready-to-post creatives</div></div></div>
+      <div class="posted-grid" id="posted-grid">
+        <div style="grid-column:1/-1;color:var(--muted);text-align:center;padding:48px 0;">No approved creatives yet.</div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="view" id="view-analytics">
+      <div class="ph"><div><div class="pt">Analytics</div><div class="ps">Creative output overview</div></div></div>
+      <div class="an-grid">
+        <div class="anc"><h3>Creatives Generated per Week</h3><div class="barchart" id="an-bars"></div></div>
+        <div class="anc"><h3>Platform Split</h3><div class="pl-list" id="an-plat"></div></div>
+        <div class="anc" style="grid-column:1/-1;"><h3>Summary</h3><div class="eng-grid">
+          <div><div class="eg-lbl">Generated</div><div class="eg-val" id="an-g">0</div></div>
+          <div><div class="eg-lbl">Approved</div><div class="eg-val" id="an-a">0</div></div>
+          <div><div class="eg-lbl">Pending</div><div class="eg-val" id="an-p">0</div></div>
+          <div><div class="eg-lbl">Calendar Entries</div><div class="eg-val" id="an-e">0</div></div>
+        </div></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODAL: CALENDAR ENTRY -->
+<div class="modal-bg" id="modal-entry">
+  <div class="modal">
+    <div class="mhdr"><span class="mtitle">📅 New Calendar Entry</span><button class="mclose" onclick="closeModal('modal-entry')">×</button></div>
+    <div style="background:var(--brand-light);border-radius:8px;padding:9px 12px;font-size:.77rem;color:var(--brand);font-weight:600;margin-bottom:15px;display:flex;align-items:center;gap:6px;">
+      <span>✦</span> Fill this once — AI generates the creative, caption &amp; hashtags automatically.
+    </div>
+    <div class="fg"><span class="fl">Date *</span><input class="fi" type="date" id="e-date"></div>
+    <div class="fg"><span class="fl">Post Type / Occasion *</span>
+      <select class="fi" id="e-type">
+        <option>Festival / Holiday</option>
+        <option>Health Awareness Day</option>
+        <option>Clinic Promotion</option>
+        <option>Patient Education</option>
+        <option>Team / Achievement Post</option>
+        <option>Product Launch</option>
+        <option>Offer / Sale</option>
+        <option>Custom Post</option>
+      </select>
+    </div>
+    <div class="fg"><span class="fl">Title — What is this post for? *</span>
+      <input class="fi" type="text" id="e-title" placeholder='E.g. "World Heart Day" or "Eid Mubarak"'>
+    </div>
+    <div class="fg"><span class="fl">Description — Extra context for AI (optional)</span>
+      <textarea id="e-desc" rows="3" placeholder="E.g. Remind followers about heart checkups. Warm and professional tone."></textarea>
+    </div>
+    <div class="f2">
+      <div class="fg"><span class="fl">Format</span><select class="fi" id="e-fmt"><option>Square Post (1:1)</option><option>Story (9:16)</option><option>Landscape (16:9)</option></select></div>
+      <div class="fg"><span class="fl">Platform</span><select class="fi" id="e-plat"><option>Instagram + Facebook</option><option>Instagram</option><option>Facebook</option><option>LinkedIn</option><option>Twitter/X</option></select></div>
+    </div>
+    <button class="btn bp bf" onclick="addEntry()">✦ Generate Creative Automatically</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════
+// CONSTANTS
+// ════════════════════════════════════════════
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS=['MON','TUE','WED','THU','FRI','SAT','SUN'];
+const TC={'Festival / Holiday':'festival','Health Awareness Day':'product','Clinic Promotion':'company','Patient Education':'custom','Team / Achievement Post':'company','Product Launch':'product','Offer / Sale':'offer','Custom Post':'custom'};
+const TE={'Festival / Holiday':'🎉','Health Awareness Day':'🩺','Clinic Promotion':'🏥','Patient Education':'💊','Team / Achievement Post':'🏆','Product Launch':'🚀','Offer / Sale':'🛍️','Custom Post':'✏️'};
+const GRAD={'Festival / Holiday':['#F59E0B','#EF4444'],'Health Awareness Day':['#0EA5E9','#6366F1'],'Clinic Promotion':['#10B981','#0EA5E9'],'Patient Education':['#6366F1','#8B5CF6'],'Team / Achievement Post':['#F59E0B','#EF4444'],'Product Launch':['#10B981','#3B82F6'],'Offer / Sale':['#EC4899','#F59E0B'],'Custom Post':['#4F46E5','#818CF8']};
+
+// ════════════════════════════════════════════
+// STORAGE
+// ════════════════════════════════════════════
+const GU=()=>{try{return JSON.parse(localStorage.getItem('animaU')||'{}');}catch{return{};}};
+const SU=u=>localStorage.setItem('animaU',JSON.stringify(u));
+const GC=()=>localStorage.getItem('animaC')||'';
+const SC=e=>localStorage.setItem('animaC',e);
+const getApiKey=()=>localStorage.getItem('animaApiKey')||'';
+const setApiKey=k=>localStorage.setItem('animaApiKey',k);
+
+function getUD(email){
+  const u=GU();
+  if(!u[email])u[email]={_pass:'',_name:'',company:{name:'',spec:'',phone:'',email:'',website:'',address:'',color1:'#4F46E5',color2:'#F59E0B',logo:null},canva:false,entries:[],creatives:[],posted:[]};
+  return u[email];
+}
+function saveUD(e,d){const u=GU();u[e]=d;SU(u);}
+
+let CU='',UD=null,curMo=new Date(),isSignup=false;
+
+// ════════════════════════════════════════════
+// API KEY SETUP
+// ════════════════════════════════════════════
+function saveApiKey(){
+  const key=document.getElementById('api-key-input').value.trim();
+  const err=document.getElementById('key-err');
+  err.style.display='none';
+  if(!key){err.textContent='Please enter your API key.';err.style.display='block';return;}
+  if(!key.startsWith('sk-ant')){err.textContent='This doesn\'t look like an Anthropic API key. It should start with sk-ant-…';err.style.display='block';return;}
+  setApiKey(key);
+  goToLogin();
+  showToast('✓ API key saved in your browser');
+}
+function skipApiKey(){
+  setApiKey('');
+  goToLogin();
+}
+function goToLogin(){
+  document.getElementById('s-apikey').classList.remove('active');
+  document.getElementById('sl').classList.add('active');
+}
+
+// ════════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════════
+function toggleAuth(){
+  isSignup=!isSignup;
+  document.getElementById('a-title').textContent=isSignup?'Create your account':'Welcome back';
+  document.getElementById('a-sub').textContent=isSignup?'Free forever — no credit card needed':'Sign in to your Anima.ai account';
+  document.querySelector('.lbtn').textContent=isSignup?'Create Account':'Sign In';
+  document.getElementById('a-sw').innerHTML=isSignup?'Already have an account? <a onclick="toggleAuth()">Sign in</a>':'New here? <a onclick="toggleAuth()">Create a free account</a>';
+  document.getElementById('a-namewrap').style.display=isSignup?'flex':'none';
+  document.getElementById('a-err').style.display='none';
+}
+function doAuth(){
+  const email=document.getElementById('a-email').value.trim();
+  const pw=document.getElementById('a-pw').value;
+  const err=document.getElementById('a-err');
+  err.style.display='none';
+  if(!email||!pw){err.textContent='Please fill in all fields.';err.style.display='block';return;}
+  if(!/\S+@\S+\.\S+/.test(email)){err.textContent='Please enter a valid email address.';err.style.display='block';return;}
+  if(pw.length<6){err.textContent='Password must be at least 6 characters.';err.style.display='block';return;}
+  const users=GU();
+  if(isSignup){
+    const name=document.getElementById('a-name').value.trim();
+    if(!name){err.textContent='Please enter your name.';err.style.display='block';return;}
+    if(users[email]?._pass){err.textContent='Account already exists. Sign in instead.';err.style.display='block';return;}
+    const ud=getUD(email);ud._pass=btoa(pw);ud._name=name;saveUD(email,ud);
+    loginUser(email,name);
+  }else{
+    if(!users[email]){
+      const ud=getUD(email);ud._pass=btoa(pw);ud._name=email.split('@')[0];saveUD(email,ud);loginUser(email,ud._name);
+    }else{
+      if(users[email]._pass&&users[email]._pass!==btoa(pw)){err.textContent='Incorrect password.';err.style.display='block';return;}
+      loginUser(email,users[email]._name||email.split('@')[0]);
+    }
+  }
+}
+function loginUser(email,name){
+  CU=email;SC(email);UD=getUD(email);
+  document.getElementById('sb-av').textContent=name.charAt(0).toUpperCase();
+  document.getElementById('sb-un').textContent=name;
+  document.getElementById('sb-ue').textContent=email;
+  document.getElementById('sl').classList.remove('active');
+  document.getElementById('sa').classList.add('active');
+  // show API key status in sidebar
+  document.getElementById('api-sb-indicator').style.display=getApiKey()?'flex':'none';
+  refreshAll();
+  showToast('Welcome, '+name.split(' ')[0]+'! 👋');
+}
+function signOut(){
+  CU='';UD=null;SC('');
+  document.getElementById('sa').classList.remove('active');
+  // Go back to API key screen so new user can enter their key
+  document.getElementById('s-apikey').classList.add('active');
+  document.getElementById('api-key-input').value='';
+  document.getElementById('key-err').style.display='none';
+}
+
+// ════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════
+function go(view,el){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+  if(el)el.classList.add('active');
+  ({calendar:renderCal,approvals:renderApprovals,posted:renderPosted,analytics:renderAnalytics,dashboard:renderDash,company:loadCoForm,integrations:loadInt}[view]||(() =>{}))();
+}
+function qn(v){return document.querySelector(`.ni[onclick*="${v}"]`);}
+
+// ════════════════════════════════════════════
+// COMPANY / PROFILE
+// ════════════════════════════════════════════
+function handleLogo(input){
+  if(!input.files[0])return;
+  document.getElementById('logo-filelbl').textContent='✓ '+input.files[0].name;
+  const r=new FileReader();
+  r.onload=e=>{
+    const img=document.getElementById('logo-img');img.src=e.target.result;img.style.display='block';
+    document.querySelector('#logo-box svg').style.display='none';
+    UD.company.logo=e.target.result;saveUD(CU,UD);
+  };
+  r.readAsDataURL(input.files[0]);
+}
+function loadCoForm(){
+  const c=UD.company||{};
+  document.getElementById('co-name').value=c.name||'';
+  document.getElementById('co-spec').value=c.spec||'';
+  document.getElementById('co-phone').value=c.phone||'';
+  document.getElementById('co-email').value=c.email||'';
+  document.getElementById('co-web').value=c.website||'';
+  document.getElementById('co-addr').value=c.address||'';
+  document.getElementById('co-c1').value=c.color1||'#4F46E5';
+  document.getElementById('co-c2').value=c.color2||'#F59E0B';
+  if(c.logo){document.getElementById('logo-img').src=c.logo;document.getElementById('logo-img').style.display='block';document.querySelector('#logo-box svg').style.display='none';}
+}
+function saveCompany(){
+  const name=document.getElementById('co-name').value.trim();
+  if(!name){showToast('Name / Clinic name is required');return;}
+  UD.company={...UD.company,name,spec:document.getElementById('co-spec').value,phone:document.getElementById('co-phone').value,email:document.getElementById('co-email').value,website:document.getElementById('co-web').value,address:document.getElementById('co-addr').value,color1:document.getElementById('co-c1').value,color2:document.getElementById('co-c2').value};
+  saveUD(CU,UD);showToast('✓ Profile saved permanently!');renderDash();
+  setTimeout(()=>go('integrations',qn('integrations')),600);
+}
+
+// ════════════════════════════════════════════
+// INTEGRATIONS
+// ════════════════════════════════════════════
+function loadInt(){
+  const btn=document.getElementById('canva-btn');
+  if(UD.canva){
+    document.getElementById('ic-canva').classList.add('connected');
+    document.getElementById('canva-ok').style.display='block';
+    btn.textContent='✓ Connected';btn.className='btn bsu bsm';btn.onclick=disconnectCanva;
+    document.getElementById('canva-sb').style.display='flex';
+  }else{
+    document.getElementById('ic-canva').classList.remove('connected');
+    document.getElementById('canva-ok').style.display='none';
+    btn.textContent='Connect';btn.className='btn bs bsm';btn.onclick=connectCanva;
+    document.getElementById('canva-sb').style.display='none';
+  }
+}
+function connectCanva(){
+  const btn=document.getElementById('canva-btn');
+  btn.innerHTML='<span style="display:inline-block;width:11px;height:11px;border:2px solid rgba(79,70,229,.25);border-top-color:var(--brand);border-radius:50%;animation:sp .7s linear infinite;margin-right:4px;"></span>Connecting…';
+  btn.disabled=true;
+  setTimeout(()=>{UD.canva=true;saveUD(CU,UD);loadInt();renderDash();btn.disabled=false;showToast('🎨 Canva connected! Creatives will be marked for auto-sync.');},1800);
+}
+function disconnectCanva(){UD.canva=false;saveUD(CU,UD);loadInt();renderDash();showToast('Canva disconnected.');}
+
+// ════════════════════════════════════════════
+// CALENDAR
+// ════════════════════════════════════════════
+function renderCal(){
+  document.getElementById('cal-lbl').textContent=MONTHS[curMo.getMonth()]+' '+curMo.getFullYear();
+  document.getElementById('cal-head').innerHTML=DAYS.map(d=>`<div>${d}</div>`).join('');
+  const body=document.getElementById('cal-body');body.innerHTML='';
+  const yr=curMo.getFullYear(),mo=curMo.getMonth();
+  let dow=new Date(yr,mo,1).getDay();dow=dow===0?6:dow-1;
+  const tot=new Date(yr,mo+1,0).getDate(),today=new Date();
+  let cells=[];
+  for(let i=0;i<dow;i++)cells.push({date:new Date(yr,mo,1-dow+i),other:true});
+  for(let i=1;i<=tot;i++)cells.push({date:new Date(yr,mo,i),other:false});
+  while(cells.length%7!==0){const l=cells[cells.length-1].date;cells.push({date:new Date(l.getFullYear(),l.getMonth(),l.getDate()+1),other:true});}
+  cells.forEach(({date,other})=>{
+    const iso=date.toISOString().split('T')[0];
+    const isT=date.toDateString()===today.toDateString();
+    const evts=(UD.entries||[]).filter(e=>e.date===iso);
+    const cell=document.createElement('div');
+    cell.className='cc'+(other?' other':'')+(isT?' today':'');
+    cell.innerHTML=`<div class="dn">${date.getDate()}</div>`+evts.map(e=>`<div class="cpill ${TC[e.type]||'custom'}">${e.title}</div>`).join('');
+    cell.onclick=()=>{document.getElementById('e-date').value=iso;openModal('modal-entry');};
+    body.appendChild(cell);
+  });
+}
+function chMo(d){curMo.setMonth(curMo.getMonth()+d);renderCal();}
+
+// ════════════════════════════════════════════
+// ADD ENTRY → TRIGGER AI GENERATION
+// ════════════════════════════════════════════
+function addEntry(){
+  const date=document.getElementById('e-date').value;
+  const title=document.getElementById('e-title').value.trim();
+  if(!date||!title){showToast('Please fill in Date and Title');return;}
+  if(!UD.company.name){showToast('⚠️ Complete your Profile first!');closeModal('modal-entry');go('company',qn('company'));return;}
+  const type=document.getElementById('e-type').value;
+  const entry={id:Date.now(),date,type,title,desc:document.getElementById('e-desc').value,fmt:document.getElementById('e-fmt').value,platform:document.getElementById('e-plat').value};
+  UD.entries=UD.entries||[];UD.entries.push(entry);
+  const colors=GRAD[type]||['#4F46E5','#818CF8'];
+  const creative={id:entry.id,title,desc:entry.desc,type,date,fmt:entry.fmt,platform:entry.platform,emoji:TE[type]||'✏️',colors,status:'generating',caption:'',hashtags:[],createdAt:new Date().toISOString(),approved:false};
+  UD.creatives=UD.creatives||[];UD.creatives.push(creative);
+  saveUD(CU,UD);
+  closeModal('modal-entry');
+  ['e-title','e-desc'].forEach(id=>document.getElementById(id).value='');
+  renderCal();updStats();renderDash();
+  showToast('✦ Generating creative for "'+title+'"…');
+  setTimeout(async()=>{
+    const c=UD.creatives.find(x=>x.id===creative.id);if(!c)return;
+    await aiGenerate(c);
+    c.status='pending';
+    saveUD(CU,UD);updStats();renderDash();
+    showToast('✅ "'+title+'" ready — go to Review Creatives!');
+    if(document.getElementById('view-approvals').classList.contains('active'))renderApprovals();
+  },2400);
+}
+
+// ════════════════════════════════════════════
+// AI GENERATION — uses stored API key
+// ════════════════════════════════════════════
+async function aiGenerate(c){
+  const apiKey=getApiKey();
+  if(!apiKey){fallbackCaption(c);return;}
+  const co=UD.company;
+  const prompt=`You are a social media expert for healthcare professionals and businesses.
+Generate a social media caption and hashtags:
+
+Professional: ${co.name}${co.spec?' ('+co.spec+')':''}
+Post Title: ${c.title}
+Post Type: ${c.type}
+Description: ${c.desc||c.title}
+Platform: ${c.platform}
+Tone: Professional yet warm and approachable.
+
+Rules:
+- Caption: 3-4 lines with emojis, ends with a soft call-to-action
+- Hashtags: exactly 10 relevant hashtags
+
+Respond ONLY with valid JSON, no backticks:
+{"caption":"...","hashtags":["#tag1","#tag2","#tag3","#tag4","#tag5","#tag6","#tag7","#tag8","#tag9","#tag10"]}`;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,messages:[{role:'user',content:prompt}]})
+    });
+    if(!res.ok){fallbackCaption(c);return;}
+    const data=await res.json();
+    const raw=data.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim();
+    let p;try{p=JSON.parse(raw);}catch{p=null;}
+    if(p&&p.caption){c.caption=p.caption;c.hashtags=p.hashtags||[];}
+    else{fallbackCaption(c);}
+  }catch{fallbackCaption(c);}
+}
+function fallbackCaption(c){
+  const co=UD.company;
+  c.caption=`✨ ${c.title} ✨\n\nAt ${co.name||'our clinic'}, your health and wellbeing is our top priority every single day.\n\nFollow us for health tips, updates, and more. Your health is our passion. 💙`;
+  c.hashtags=[`#${c.title.replace(/\s+/g,'')}`,`#${(co.name||'Health').replace(/\s/g,'')}`,`#Healthcare`,`#${(co.spec||'Doctor').replace(/\s/g,'')}`,`#HealthAwareness`,`#MedicalCare`,`#WellnessJourney`,`#StayHealthy`,`#HealthTips`,`#PatientCare`];
+}
+
+// ════════════════════════════════════════════
+// DRAW CREATIVE ON CANVAS
+// ════════════════════════════════════════════
+function drawCanvas(canvas,c){
+  const ctx=canvas.getContext('2d'),W=800,H=800;
+  canvas.width=W;canvas.height=H;
+  const co=UD.company;
+  const c1=co.color1||c.colors[0]||'#4F46E5';
+  const c2=co.color2||c.colors[1]||'#818CF8';
+  const g=ctx.createLinearGradient(0,0,W,H);g.addColorStop(0,c1);g.addColorStop(1,c2);
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.globalAlpha=.09;ctx.fillStyle='#fff';
+  ctx.beginPath();ctx.arc(W*.85,H*.15,190,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(W*.1,H*.9,150,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(W*.5,H*.5,310,0,Math.PI*2);ctx.fill();
+  ctx.globalAlpha=1;
+  // top bar
+  ctx.fillStyle='rgba(0,0,0,.2)';ctx.fillRect(0,0,W,58);
+  if(co.logo){try{const img=new Image();img.src=co.logo;ctx.save();ctx.beginPath();ctx.arc(34,29,20,0,Math.PI*2);ctx.clip();ctx.drawImage(img,14,9,40,40);ctx.restore();}catch{}}
+  ctx.fillStyle='rgba(255,255,255,.92)';ctx.font='bold 17px sans-serif';ctx.textAlign='left';
+  ctx.fillText(co.name||'Your Name',co.logo?62:14,24);
+  if(co.spec){ctx.fillStyle='rgba(255,255,255,.6)';ctx.font='500 13px sans-serif';ctx.fillText(co.spec,co.logo?62:14,42);}
+  // type badge
+  const bw=ctx.measureText(c.type).width+22;
+  ctx.fillStyle='rgba(255,255,255,.18)';rRect(ctx,W-bw-12,12,bw,28,8);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.88)';ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+  ctx.fillText(c.type,W-bw/2-12,31);
+  // emoji
+  ctx.font=`${W*.26}px serif`;ctx.textAlign='center';ctx.fillText(c.emoji||'✨',W/2,H*.52);
+  // title
+  ctx.fillStyle='#fff';ctx.shadowColor='rgba(0,0,0,.3)';ctx.shadowBlur=12;
+  ctx.font=`900 ${W*.075}px sans-serif`;ctx.textAlign='center';
+  wrapTxt(ctx,c.title.toUpperCase(),W/2,H*.67,W-56,W*.084);
+  ctx.shadowBlur=0;
+  // footer
+  ctx.fillStyle='rgba(0,0,0,.2)';ctx.fillRect(0,H-44,W,44);
+  ctx.fillStyle='rgba(255,255,255,.75)';ctx.font='600 14px sans-serif';ctx.textAlign='center';
+  ctx.fillText(`${fmtDate(c.date)}  ·  ${c.platform}`,W/2,H-16);
+}
+function rRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+function wrapTxt(ctx,text,x,y,maxW,lh){const words=text.split(' ');let line='',cy=y;words.forEach((w,i)=>{const t=line+w+' ';if(ctx.measureText(t).width>maxW&&i>0){ctx.fillText(line.trim(),x,cy);line=w+' ';cy+=lh;}else line=t;});ctx.fillText(line.trim(),x,cy);}
+
+// ════════════════════════════════════════════
+// RENDER APPROVALS
+// ════════════════════════════════════════════
+function renderApprovals(){
+  const grid=document.getElementById('appr-grid');
+  const list=(UD.creatives||[]).filter(c=>!c.approved);
+  if(!list.length){grid.innerHTML='<div style="grid-column:1/-1;color:var(--muted);text-align:center;padding:48px 0;font-size:.88rem;line-height:1.8;">No creatives awaiting review.<br>Add entries to your calendar and AI will generate everything automatically.</div>';return;}
+  grid.innerHTML=list.map(c=>`
+    <div class="pcard" id="pc-${c.id}">
+      <div class="pcard-img">
+        <canvas id="cv-${c.id}"></canvas>
+        ${c.status==='generating'?`<div class="gen-overlay"><div class="gspin"></div><div class="gen-label">AI Generating<span class="ldots"></span></div><div class="gen-sub">Creative · Caption · Hashtags</div></div>`:''}
+      </div>
+      <div class="pcard-body">
+        <div class="pcard-badges">
+          <span class="badge ${c.status==='generating'?'bg-gen':'bg-pend'}">${c.status==='generating'?'⚡ Generating':'⏳ Ready for Review'}</span>
+          <span class="badge bg-grey">${c.fmt}</span>
+          <span class="badge bg-grey">${c.platform}</span>
+          ${UD.canva?'<span class="badge bg-canva">🎨 Canva Synced</span>':''}
+        </div>
+        <div class="pcard-title">${c.title}</div>
+        ${c.desc?`<div class="pcard-desc">${esc(c.desc)}</div>`:''}
+        ${c.caption?`<div class="caption-box"><div class="caption-box-lbl">✦ AI Caption</div><div class="caption-text">${esc(c.caption)}</div><div class="hashtag-text">${(c.hashtags||[]).join(' ')}</div></div>`:''}
+        <div class="pcard-meta">
+          <span class="badge bg-grey">📅 ${fmtDate(c.date)}</span>
+          <span class="badge bg-grey">${c.type}</span>
+        </div>
+      </div>
+      ${c.status!=='generating'?`
+      <div class="pcard-actions">
+        <button class="btn bsu bsm" onclick="approveC(${c.id})">✓ Approve &amp; Download</button>
+        <button class="btn bs bsm" onclick="copyText(${c.id})">📋 Copy Caption</button>
+        <button class="btn bds bsm" onclick="rejectC(${c.id})">✕ Reject</button>
+      </div>`:`<div class="pcard-actions" style="background:var(--brand-light);"><span style="font-size:.75rem;color:var(--brand);font-weight:600;">AI is working — actions appear shortly.</span></div>`}
+    </div>`).join('');
+  list.forEach(c=>{const cv=document.getElementById('cv-'+c.id);if(cv)drawCanvas(cv,c);});
+}
+
+function approveC(id){
+  const c=UD.creatives.find(x=>x.id===id);if(!c)return;
+  dlCreative(id);
+  c.approved=true;c.status='posted';c.approvedAt=new Date().toISOString();
+  UD.posted=UD.posted||[];UD.posted.push({...c});
+  saveUD(CU,UD);updStats();renderApprovals();renderDash();
+  showToast('✅ Approved! Creative downloaded to your device.');
+}
+function dlCreative(id){
+  const c=UD.creatives.find(x=>x.id===id);if(!c)return;
+  const cv=document.createElement('canvas');drawCanvas(cv,c);
+  const a=document.createElement('a');a.download=c.title.replace(/\W+/g,'-')+'-'+c.date+'.png';a.href=cv.toDataURL('image/png');a.click();
+}
+function copyText(id){
+  const c=UD.creatives.find(x=>x.id===id);if(!c)return;
+  const txt=`${c.title}\n\n${c.caption||''}\n\n${(c.hashtags||[]).join(' ')}`.trim();
+  navigator.clipboard?.writeText(txt).then(()=>showToast('📋 Caption + hashtags copied!')).catch(()=>showToast('📋 Ready'));
+}
+function rejectC(id){
+  UD.creatives=UD.creatives.filter(x=>x.id!==id);
+  UD.entries=(UD.entries||[]).filter(e=>e.id!==id);
+  saveUD(CU,UD);updStats();renderApprovals();renderCal();renderDash();showToast('Creative removed.');
+}
+
+// ════════════════════════════════════════════
+// POSTED / DOWNLOADED
+// ════════════════════════════════════════════
+function renderPosted(){
+  const grid=document.getElementById('posted-grid');
+  const list=(UD.posted||[]).slice().reverse();
+  if(!list.length){grid.innerHTML='<div style="grid-column:1/-1;color:var(--muted);text-align:center;padding:48px 0;">No approved creatives yet.</div>';return;}
+  grid.innerHTML=list.map(c=>`
+    <div class="posted-card">
+      <div class="posted-card-img"><canvas id="pv-${c.id}"></canvas></div>
+      <div class="posted-card-body">
+        <div class="posted-card-title">${c.title}</div>
+        <div class="posted-card-meta">${c.type} · ${fmtDate(c.date)} · ${c.platform}</div>
+        ${c.caption?`<div class="posted-card-cap">${esc(c.caption.slice(0,70))}…</div>`:''}
+      </div>
+      <div class="posted-card-actions">
+        <button class="btn bs bsm" onclick="dlCreative(${c.id})">⬇ Download Again</button>
+        <button class="btn bs bsm" onclick="copyText(${c.id})">📋 Copy Text</button>
+      </div>
+    </div>`).join('');
+  list.forEach(c=>{const cv=document.getElementById('pv-'+c.id);if(cv)drawCanvas(cv,c);});
+}
+
+// ════════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════════
+function renderDash(){
+  const steps=[
+    {label:'Profile',sub:'Set up',done:!!UD.company.name,view:'company',ico:'🏢'},
+    {label:'Canva',sub:'Connect',done:UD.canva,view:'integrations',ico:'🎨'},
+    {label:'Calendar',sub:'Add dates',done:(UD.entries||[]).length>0,view:'calendar',ico:'📅'},
+    {label:'AI Generates',sub:'Automatic',done:(UD.creatives||[]).length>0,view:'approvals',ico:'✦'},
+    {label:'Download',sub:'& Post',done:(UD.posted||[]).length>0,view:'posted',ico:'⬇'},
+  ];
+  const next=steps.findIndex(s=>!s.done);
+  document.getElementById('flow-steps').innerHTML=steps.map((s,i)=>`
+    ${i>0?'<div class="farrow">›</div>':''}
+    <div class="fstep" onclick="go('${s.view}',qn('${s.view}'))">
+      <div class="fstep-ico ${s.done?'done':i===next?'next':''}">${s.done?'✅':s.ico}</div>
+      <div class="fstep-lbl">${s.label}</div>
+      <div class="fstep-sub">${s.done?'Done ✓':i===next?'Next →':s.sub}</div>
+    </div>`).join('');
+  const all=(UD.creatives||[]).slice(-5).reverse();
+  const el=document.getElementById('act-list');
+  if(!all.length){el.innerHTML='<div class="empty-hint">No creatives yet.<br>Add dates to your calendar — AI generates everything.</div>';return;}
+  el.innerHTML=all.map(c=>`
+    <div class="ai-item">
+      <div class="ai-ico" style="background:linear-gradient(135deg,${UD.company.color1||c.colors[0]},${UD.company.color2||c.colors[1]});">${c.emoji}</div>
+      <div><div class="ai-t">${c.title}</div><div class="ai-m">${c.type} · ${fmtDate(c.date)}</div></div>
+      <span class="badge ${c.approved?'bg-done':c.status==='generating'?'bg-gen':'bg-pend'}">${c.approved?'Approved':c.status==='generating'?'Generating':'Ready'}</span>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════════
+// ANALYTICS
+// ════════════════════════════════════════════
+function renderAnalytics(){
+  const cr=UD.creatives||[];const posted=UD.posted||[];const pending=cr.filter(c=>!c.approved);
+  const base=Math.max(cr.length,1);
+  const vals=[0,0,0,0,0,cr.length,Math.max(cr.length-1,0),posted.length];
+  const mx=Math.max(...vals,1);
+  document.getElementById('an-bars').innerHTML=['W1','W2','W3','W4','W5','W6','W7','W8'].map((w,i)=>
+    `<div class="bw"><div class="bar" style="height:${Math.round(vals[i]/mx*100)}px;background:${i===5?'var(--brand)':'#C7D2FE'};"></div><div class="bl">${w}</div></div>`).join('');
+  document.getElementById('an-plat').innerHTML=[
+    {n:'Instagram',ic:'📷',bg:'#FEE2E2',p:45},{n:'Facebook',ic:'📘',bg:'#DBEAFE',p:30},
+    {n:'LinkedIn',ic:'💼',bg:'#D1FAE5',p:15},{n:'Twitter/X',ic:'🐦',bg:'#F3F4F6',p:10}
+  ].map(p=>`<div class="pl-row"><div class="pl-ico" style="background:${p.bg};">${p.ic}</div><div class="pl-name">${p.n}</div><div class="pl-bg"><div class="pl-fill" style="width:${p.p}%;"></div></div><div class="pl-pct">${p.p}%</div></div>`).join('');
+  document.getElementById('an-g').textContent=cr.length;
+  document.getElementById('an-a').textContent=posted.length;
+  document.getElementById('an-p').textContent=pending.length;
+  document.getElementById('an-e').textContent=(UD.entries||[]).length;
+}
+
+// ════════════════════════════════════════════
+// STATS
+// ════════════════════════════════════════════
+function updStats(){
+  const cr=UD.creatives||[];
+  const pend=cr.filter(c=>!c.approved);
+  document.getElementById('st-c').textContent=cr.length;
+  document.getElementById('st-a').textContent=pend.length;
+  document.getElementById('st-p').textContent=(UD.posted||[]).length;
+  document.getElementById('st-e').textContent=(UD.entries||[]).length;
+  const dot=document.getElementById('appr-dot');
+  dot.textContent=pend.length;dot.style.display=pend.length?'flex':'none';
+}
+
+// ════════════════════════════════════════════
+// REFRESH ALL
+// ════════════════════════════════════════════
+function refreshAll(){UD=getUD(CU);loadCoForm();loadInt();renderCal();updStats();renderDash();}
+
+// ════════════════════════════════════════════
+// MODAL
+// ════════════════════════════════════════════
+function openModal(id){
+  if(id==='modal-entry'&&!document.getElementById('e-date').value)document.getElementById('e-date').value=new Date().toISOString().split('T')[0];
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-bg').forEach(bg=>bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('open');}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-bg.open').forEach(m=>m.classList.remove('open'));});
+
+// ════════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════════
+let _tt;
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),3200);}
+
+// ════════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════════
+function fmtDate(iso){if(!iso||iso.length<8)return iso||'';const d=new Date(iso);return d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+' '+d.getFullYear();}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');}
+
+// ════════════════════════════════════════════
+// INIT — auto-login if session saved
+// ════════════════════════════════════════════
+(function(){
+  // If API key already saved, skip that screen
+  if(getApiKey()){
+    document.getElementById('s-apikey').classList.remove('active');
+    const saved=GC();
+    if(saved){const u=GU();if(u[saved]){loginUser(saved,u[saved]._name||saved.split('@')[0]);return;}}
+    document.getElementById('sl').classList.add('active');
+  }
+  // else: API key screen stays active (default)
+})();
+</script>
+</body>
+</html>
